@@ -40,7 +40,7 @@ describe('ngTooltip', function() {
 
     // Cleanup any tooltips attached to body
     afterEach(function() {
-      tooltip().remove();
+      scope.$destroy();
     });
 
     describe('simple tooltip', function() {
@@ -48,6 +48,14 @@ describe('ngTooltip', function() {
         build('<a href="" ng-tooltip="Hello World"></a>');
         enter();
         expect(tooltip()).to.have.text('Hello World');
+      });
+    });
+
+    describe('simple tooltip', function() {
+      it('allows me to specify a simple tooltip', function() {
+        build('<a href="" ng-tooltip="Foo"></a>');
+        enter();
+        expect(tooltip()).to.have.text('Foo');
       });
     });
   });

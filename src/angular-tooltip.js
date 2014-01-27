@@ -25,13 +25,13 @@
           link: function(scope, elem) {
             var template = $templateCache.get(templateUrl),
                 tooltip = $compile(template)(scope),
-                tetherInstance;
+                tether;
 
             /**
              * Attach a tether to the tooltip and the target element.
              */
-            function tether() {
-              tetherInstance = new Tether({
+            function attachTether() {
+              tether = new Tether({
                 element: tooltip,
                 target: elem,
                 attachment: 'top left',
@@ -40,19 +40,28 @@
             };
 
             /**
+             * Detach the thether.
+             */
+            function detachTether() {
+              if (tether) {
+                tether.destroy();
+              };
+            };
+
+            /**
              * Add the tooltip to the DOM.
              */
             function enter() {
               $animate.enter(tooltip, null, elem);
-              tether();
+              attachTether();
             };
 
             /**
              * Remove the tooltip from the DOM.
              */
             function leave() {
-              console.log('leave');
               $animate.leave(tooltip);
+              detachTether();
             };
 
             /**
@@ -67,11 +76,7 @@
             /**
              * Destroy the tether when this tooltip is removed.
              */
-            scope.$on('$destroy', function() {
-              if (tetherInstance) {
-                tetherInstance.destroy();
-              };
-            });
+            scope.$on('$destroy', leave);
           }
         };
       };
