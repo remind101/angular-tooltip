@@ -4,67 +4,86 @@
   var module = angular.module('ngTooltip', ['ng']);
 
   module.provider('$tooltip', function() {
-    var defaultTemplate = 'template/ng-tooltip.html'
+    // Default template for tooltips.
+    var defaultTemplateUrl = 'template/ng-tooltip.html'
+    this.setDefaultTemplateUrl = function(templateUrl) {
+      defaultTemplateUrl = templateUrl;
+    };
 
+    /**
+     * Returns a factory function for building a directive for tooltips.
+     *
+     * @param {String} name - The name of the directive.
+     */
     this.$get = function($compile, $templateCache, $animate) {
-      return function(prefix, options) {
-        options = options || {};
-
-        if (!options.template && !options.templateUrl) {
-          options.templateUrl = defaultTemplate;
-        }
-
-        if (!options.trigger) {
-          options.trigger = 'hover';
-        }
-
-        var triggerAttr = prefix + '-trigger';
-
-        function getTemplate() {
-          if (options.templateUrl) {
-            return $templateCache.get(options.templateUrl);
-          } else {
-            return options.template;
-          }
-        };
+      return function(name) {
+        var templateUrl = defaultTemplateUrl;
 
         return {
           restrict: 'EA',
-          link: function(scope, elem, attrs) {
-            var template = getTemplate(),
-                tooltip = $compile(template)(scope);
+          scope: { content: '@' + name },
+          link: function(scope, elem) {
+            var template = $templateCache.get(templateUrl),
+                tooltip = $compile(template)(scope),
+                tetherInstance;
 
-            var trigger = attrs[triggerAttr] || options.trigger;
-
-            var enter = function() {
-              $animate.enter(tooltip, null, elem);
+            /**
+             * Attach a tether to the tooltip and the target element.
+             */
+            function tether() {
+              tetherInstance = new Tether({
+                element: tooltip,
+                target: elem,
+                attachment: 'top left',
+                targetAttachment: 'bottom right'
+              });
             };
 
-            var leave = function() {
+            /**
+             * Add the tooltip to the DOM.
+             */
+            function enter() {
+              $animate.enter(tooltip, null, elem);
+              tether();
+            };
+
+            /**
+             * Remove the tooltip from the DOM.
+             */
+            function leave() {
+              console.log('leave');
               $animate.leave(tooltip);
             };
 
-            var handlers = {
-              hover: function() {
-                elem.hover(function() {
-                  scope.$apply(enter);
-                }, function() {
-                  scope.$apply(leave);
-                });
-              },
-              manual: function() {
-              }
-            }
+            /**
+             * Toggle the tooltip.
+             */
+            elem.hover(function() {
+              scope.$apply(enter);
+            }, function() {
+              scope.$apply(leave);
+            });
 
-            handlers[trigger]();
+            /**
+             * Destroy the tether when this tooltip is removed.
+             */
+            scope.$on('$destroy', function() {
+              if (tetherInstance) {
+                tetherInstance.destroy();
+              };
+            });
           }
         };
       };
-    }
+    };
   });
 
   module.directive('ngTooltip', function($tooltip) {
-    return $tooltip('ng-tooltip');
+    return $tooltip('ngTooltip');
+  });
+
+  module.run(function($templateCache) {
+    $templateCache.put('template/ng-tooltip.html', '<div class="tooltip">{{content}}</div>');
   });
 
 })(angular);

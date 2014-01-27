@@ -2,22 +2,53 @@ describe('ngTooltip', function() {
 
   beforeEach(module('ngTooltip'));
 
-  beforeEach(inject(function($templateCache) {
-    $templateCache.put('template/ng-tooltip.html', '<div class="tooltip">Tooltip</div>');
-  }));
-
   describe('ngTooltipDirective', function() {
-    var elem, scope;
+    var elem, scope, body;
 
-    beforeEach(inject(function($rootScope, $compile) {
-      elem = angular.element('<a href="" ng-tooltip></a>');
-      scope = $rootScope;
-      $compile(elem)(scope);
-      scope.$digest();
-    }));
+    /**
+     * Build a tooltip.
+     */
+    function build(content) {
+      return inject(function($rootScope, $compile) {
+        elem = angular.element('<div>' + content + '</div>');
+        scope = $rootScope;
+        $compile(elem)(scope);
+        scope.$digest();
+      });
+    };
 
-    it('does something', function() {
-      console.log(elem.html());
+    /**
+     * Open the tooltip.
+     */
+    function enter() {
+      elem.find('a').trigger('mouseenter');
+    };
+
+    /**
+     * Close the tooltip.
+     */
+    function leave() {
+      elem.find('a').trigger('mouseleave');
+    };
+
+    /**
+     * The tooltip
+     */
+    function tooltip() {
+      return $(document.body).find('.tooltip');
+    };
+
+    // Cleanup any tooltips attached to body
+    afterEach(function() {
+      tooltip().remove();
+    });
+
+    describe('simple tooltip', function() {
+      it('allows me to specify a simple tooltip', function() {
+        build('<a href="" ng-tooltip="Hello World"></a>');
+        enter();
+        expect(tooltip()).to.have.text('Hello World');
+      });
     });
   });
 });

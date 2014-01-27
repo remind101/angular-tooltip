@@ -27,6 +27,7 @@ module.exports = function(config) {
       // Helpers
       'bower_components/angular-mocks/angular-mocks.js',
       'node_modules/chai/chai.js',
+      'node_modules/chai-jquery/chai-jquery.js',
       'node_modules/sinon/lib/sinon.js',
       'node_modules/sinon/lib/sinon/spy.js',
       'node_modules/sinon/lib/sinon/stub.js',
