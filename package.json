@@ -1,0 +1,25 @@
+{
+  "name": "remind101.js",
+  "description": "Restangular client for the Remind101 API",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-ngmin": "~0.0.3",
+    "grunt-karma": "~0.6.2",
+    "load-grunt-tasks": "~0.2.0",
+    "karma": "latest",
+    "karma-mocha": "latest",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "chai": "latest",
+    "sinon": "latest",
+    "sinon-chai": "latest"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  }
+}

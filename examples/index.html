@@ -1,0 +1,44 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <title>Index</title>
+
+  <style type="text/css">
+  .tooltip {
+    position: absolute;
+    color: #fff;
+    background: #000;
+    border-radius: 3px;
+    padding: 10px 20px;
+    display: inline-block;
+  }
+
+  .tooltip.ng-enter {
+    opacity: 0;
+    transition: opacity 1s;
+  }
+
+  .tooltip.ng-enter-active {
+    opacity: 1;
+  }
+  </style>
+
+  <script src="../bower_components/jquery/jquery.js"></script>
+  <script src="../bower_components/angular/angular.js"></script>
+  <script src="../bower_components/angular-animate/angular-animate.js"></script>
+  <script src="../src/angular-tooltip.js"></script>
+  <script>
+    var app = angular.module('app', ['ng', 'ngAnimate', 'ngTooltip']);
+
+    app.run(function($templateCache) {
+      $templateCache.put('template/ng-tooltip.html', '<div class="tooltip">Foo</div>');
+    });
+  </script>
+</head>
+<body ng-app="app">
+  <div>
+    <a href="" ng-tooltip="Foobar">Open</a>
+  </div>
+</body>
+</html>

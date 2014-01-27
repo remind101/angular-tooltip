@@ -1,0 +1,26 @@
+{
+  "name": "angular-tooltip",
+  "version": "0.0.1",
+  "main": "./dist/angular-modal.min.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/remind101/angular-modal.git"
+  },
+  "dependencies": {
+    "angular": "*",
+    "tether": "~0.4.8"
+  },
+  "devDependencies": {
+    "jquery": "*",
+    "angular-mocks": "*",
+    "angular-animate": "*"
+  },
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "lib"
+  ],
+  "resolutions": {
+    "angular": "1.2.9"
+  }
+}
