@@ -1,16 +1,10 @@
 (function(angular) {
   'use strict';
 
-  function bind(fn, context) {
-    return function() {
-      fn.apply(context, arguments);
-    };
-  };
-
   var module = angular.module('ngTooltip', ['ng']),
       extend = angular.extend;
 
-  module.provider('$Tooltip', function() {
+  module.provider('$tooltip', function() {
     // Default template for tooltips.
     var defaultTemplateUrl = 'template/ng-tooltip.html'
     this.setDefaultTemplateUrl = function(templateUrl) {
@@ -28,69 +22,59 @@
     };
 
     this.$get = function($rootScope, $animate, $compile, $templateCache) {
-      /**
-       * Class the represents a tooltip.
-       */
-      function Tooltip(options) {
+      return function(options) {
         options = options || {};
+        options = extend({ templateUrl: defaultTemplateUrl }, defaultOptions, options);
 
-        this.options = extend({
-          templateUrl: defaultTemplateUrl
-        }, defaultOptions, options);
-
-        var template = $templateCache.get(this.options.templateUrl),
-            scope = this.options.scope || $rootScope.$new();
-
-        this.elem = $compile(template)(scope);
-        this.target = this.options.target;
-
-        scope.$on('$destroy', bind(this.close, this));
-      };
-
-      extend(Tooltip.prototype, {
-        /**
-         * Show the tooltip, adding it to the DOM.
-         */
-        open: function() {
-          $animate.enter(this.elem, null, this.target);
-          this._attachTether();
-          return this;
-        },
-
-        /**
-         * Hide the tooltip, removing it from the DOM.
-         */
-        close: function() {
-          $animate.leave(this.elem);
-          this._detachTether();
-          return this;
-        },
+        var template = $templateCache.get(options.templateUrl),
+            scope    = options.scope || $rootScope.$new(),
+            target   = options.target,
+            elem     = $compile(template)(scope),
+            tether;
 
         /**
          * Attach a tether to the tooltip and the target element.
          */
-        _attachTether: function() {
-          var options = extend({
-            element: this.elem,
-            target: this.target
-          }, this.options.tether);
-
-          this.tether = new Tether(options);
-
-          return this.tether;
-        },
+        function attachTether() {
+          tether = new Tether(extend({
+            element: elem,
+            target: target
+          }, options.tether));
+        };
 
         /**
-         * Detach the thether.
+         * Detach the tether.
          */
-        _detachTether: function() {
-          if (this.tether) {
-            this.tether.destroy();
+        function detachTether() {
+          if (tether) {
+            tether.destroy();
           }
-        }
-      });
+        };
 
-      return Tooltip;
+        /**
+         * Open the tooltip
+         */
+        function open() {
+          $animate.enter(elem, null, target);
+          attachTether();
+        };
+
+        /**
+         * Close the tooltip
+         */
+        function close() {
+          $animate.leave(elem);
+          detachTether();
+        };
+
+        // Close the tooltip when the scope is destroyed.
+        scope.$on('$destroy', close);
+
+        return {
+          open: open,
+          close: close
+        };
+      };
     }
   });
 
@@ -101,7 +85,7 @@
      *
      * @param {String} name - The name of the directive.
      */
-    this.$get = function($Tooltip) {
+    this.$get = function($tooltip) {
       return function(name, options) {
         return {
           restrict: 'EA',
@@ -110,21 +94,18 @@
             tether:  '=?' + name + 'Tether'
           },
           link: function(scope, elem, attrs) {
-            var tooltip = new $Tooltip(extend({
+            var tooltip = $tooltip(extend({
               target: elem,
               scope: scope
             }, options));
-
-            var open  = bind(tooltip.open, tooltip),
-                close = bind(tooltip.close, tooltip);
 
             /**
              * Toggle the tooltip.
              */
             elem.hover(function() {
-              scope.$apply(open);
+              scope.$apply(tooltip.open);
             }, function() {
-              scope.$apply(close);
+              scope.$apply(tooltip.close);
             });
           }
         };
