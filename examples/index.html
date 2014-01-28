@@ -32,14 +32,19 @@
   <script>
     var app = angular.module('app', ['ng', 'ngAnimate', 'ngTooltip']);
 
-    app.run(function($templateCache) {
-      $templateCache.put('template/ng-tooltip.html', '<div class="tooltip">Foo</div>');
+    app.controller('AppCtrl', function($scope) {
+      $scope.tooltipVisible = false;
+
+      $scope.toggleTooltip = function() {
+        $scope.tooltipVisible = !$scope.tooltipVisible;
+      };
     });
   </script>
 </head>
 <body ng-app="app">
-  <div>
-    <a href="" ng-tooltip="Foobar">Open</a>
+  <div ng-controller="AppCtrl">
+    <a href="" ng-tooltip="Foobar">hover</a>
+    <a href="" ng-tooltip="Hello" ng-click="toggleTooltip()" ng-tooltip-if="tooltipVisible">Click</a>
   </div>
 </body>
 </html>

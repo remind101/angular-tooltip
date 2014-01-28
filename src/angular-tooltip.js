@@ -16,27 +16,36 @@
      * @param {String} name - The name of the directive.
      */
     this.$get = function($compile, $templateCache, $animate) {
-      return function(name) {
-        var templateUrl = defaultTemplateUrl;
+      return function(name, options) {
+        options = options || {};
+
+        var templateUrl = options.templateUrl || defaultTemplateUrl;
 
         return {
           restrict: 'EA',
-          scope: { content: '@' + name },
-          link: function(scope, elem) {
+          scope: {
+            content:  '@' + name,
+            tether:  '=?' + name + 'Tether'
+          },
+          link: function(scope, elem, attrs) {
             var template = $templateCache.get(templateUrl),
-                tooltip = $compile(template)(scope),
+                tooltip  = $compile(template)(scope),
                 tether;
+
+            scope.tether = scope.tether || {};
 
             /**
              * Attach a tether to the tooltip and the target element.
              */
             function attachTether() {
-              tether = new Tether({
+              var options = angular.extend({}, {
                 element: tooltip,
                 target: elem,
-                attachment: 'top left',
-                targetAttachment: 'bottom right'
-              });
+                attachment: 'top middle',
+                targetAttachment: 'bottom middle'
+              }, scope.tether);
+
+              tether = new Tether(options);
             };
 
             /**
@@ -62,6 +71,17 @@
             function leave() {
               $animate.leave(tooltip);
               detachTether();
+            };
+
+            /**
+             * Enters or leaves based on the truthyness of the supplied value.
+             */
+            function toggle(value) {
+              if (value) {
+                enter();
+              } else {
+                leave();
+              }
             };
 
             /**

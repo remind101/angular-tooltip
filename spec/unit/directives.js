@@ -20,15 +20,17 @@ describe('ngTooltip', function() {
     /**
      * Open the tooltip.
      */
-    function enter() {
-      elem.find('a').trigger('mouseenter');
+    function enter(event) {
+      event = event || 'mouseenter';
+      elem.find('a').trigger(event);
     };
 
     /**
      * Close the tooltip.
      */
-    function leave() {
-      elem.find('a').trigger('mouseleave');
+    function leave(event) {
+      event = event || 'mouseleave';
+      elem.find('a').trigger(event);
     };
 
     /**
@@ -44,18 +46,39 @@ describe('ngTooltip', function() {
     });
 
     describe('simple tooltip', function() {
-      it('allows me to specify a simple tooltip', function() {
+      beforeEach(function() {
         build('<a href="" ng-tooltip="Hello World"></a>');
         enter();
+      });
+
+      it('allows me to trigger the tooltip on hover', function() {
         expect(tooltip()).to.have.text('Hello World');
+      });
+
+      it('allows me to close the tooltip on blur', function() {
+        leave();
+        expect(tooltip()).to.not.exist;
+      });
+
+      it('is attached by default', function() {
+        expect(tooltip()).to.be.tethered({
+          element: 'top middle',
+          target: 'bottom middle'
+        });
       });
     });
 
-    describe('simple tooltip', function() {
-      it('allows me to specify a simple tooltip', function() {
-        build('<a href="" ng-tooltip="Foo"></a>');
+    describe('tethering', function() {
+      beforeEach(function() {
+        build('<a href="" ng-tooltip="Hello World" ng-tooltip-tether="{ targetAttachment: \'top right\' }"></a>');
         enter();
-        expect(tooltip()).to.have.text('Foo');
+      });
+
+      it('allows me to specify target tethering', function() {
+        expect(tooltip()).to.be.tethered({
+          element: 'top middle',
+          target: 'top right'
+        });
       });
     });
   });
