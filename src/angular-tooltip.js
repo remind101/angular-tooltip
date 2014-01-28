@@ -11,20 +11,19 @@
       defaultTemplateUrl = templateUrl;
     };
 
-    var defaultOptions = {
-      tether: {
-        attachment: 'top middle',
-        targetAttachment: 'bottom middle'
-      }
+    var defaultTetherOptions = {
+      attachment: 'top middle',
+      targetAttachment: 'bottom middle'
     };
-    this.setDefaultOptions = function(options) {
-      extend(defaultOptions, options);
+    this.setDefaultTetherOptions = function(options) {
+      extend(defaultTetherOptions, options);
     };
 
     this.$get = function($rootScope, $animate, $compile, $templateCache) {
       return function(options) {
         options = options || {};
-        options = extend({ templateUrl: defaultTemplateUrl }, defaultOptions, options);
+        options = extend({ templateUrl: defaultTemplateUrl }, options);
+        options.tether = extend({}, defaultTetherOptions, options.tether || {});
 
         var template = $templateCache.get(options.templateUrl),
             scope    = options.scope || $rootScope.$new(),
@@ -36,7 +35,7 @@
          * Attach a tether to the tooltip and the target element.
          */
         function attachTether() {
-          tether = new Tether(extend({
+          new Tether(extend({
             element: elem,
             target: target
           }, options.tether));
@@ -97,7 +96,7 @@
             var tooltip = $tooltip(extend({
               target: elem,
               scope: scope
-            }, options));
+            }, options, { tether: scope.tether }));
 
             /**
              * Toggle the tooltip.

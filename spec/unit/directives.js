@@ -68,7 +68,7 @@ describe('ngTooltip', function() {
       });
     });
 
-    xdescribe('tethering', function() {
+    describe('tethering', function() {
       beforeEach(function() {
         build('<a href="" ng-tooltip="Hello World" ng-tooltip-tether="{ targetAttachment: \'top right\' }"></a>');
         enter();
