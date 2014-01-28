@@ -31,20 +31,11 @@
   <script src="../src/angular-tooltip.js"></script>
   <script>
     var app = angular.module('app', ['ng', 'ngAnimate', 'ngTooltip']);
-
-    app.controller('AppCtrl', function($scope) {
-      $scope.tooltipVisible = false;
-
-      $scope.toggleTooltip = function() {
-        $scope.tooltipVisible = !$scope.tooltipVisible;
-      };
-    });
   </script>
 </head>
 <body ng-app="app">
-  <div ng-controller="AppCtrl">
+  <div>
     <a href="" ng-tooltip="Foobar">hover</a>
-    <a href="" ng-tooltip="Hello" ng-click="toggleTooltip()" ng-tooltip-if="tooltipVisible">Click</a>
   </div>
 </body>
 </html>
