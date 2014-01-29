@@ -25,7 +25,7 @@ Simple and extensible abstraction for tooltips with AngularJS. Based on
 Angular Tooltip gives you an `ng-tooltip` directive that you can use for simple
 text only tooltips:
 
-```
+```html
 <a href="" ng-tooltip="Click Me!">Go</a>
 ```
 
@@ -34,7 +34,7 @@ text only tooltips:
 While the directive is nice for simple tooltips that are text based, more often
 than not you want to show dynamic content within the tooltip. Angular Tooltip
 gives you a `$tooltip` service to build tooltips. The object returned by this
-function provides you with a `open` and `close` methods that you can use to
+function provides you with `open` and `close` methods that you can use to
 show and hide the tooltip.
 
 ```javascript
@@ -43,7 +43,11 @@ module.directive('myTooltip', function($tooltip) {
     restrict: 'EA',
     scope: { show: '=myTooltip' },
     link: function(scope, elem) {
-      var tooltip = $tooltip({ target: elem, scope: scope });
+      var tooltip = $tooltip({
+        target: elem,
+        scope: scope,
+        templateUrl: 'template/my-tooltip.html'
+      });
 
       scope.$watch('show', function(value) {
         if (value) {
