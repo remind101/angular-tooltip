@@ -25,7 +25,7 @@
         options = extend({ templateUrl: defaultTemplateUrl }, options);
         options.tether = extend({}, defaultTetherOptions, options.tether || {});
 
-        var template = $templateCache.get(options.templateUrl),
+        var template = options.template || $templateCache.get(options.templateUrl),
             scope    = options.scope || $rootScope.$new(),
             target   = options.target,
             elem     = $compile(template)(scope),
