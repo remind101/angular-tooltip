@@ -8,7 +8,7 @@ Simple and extensible abstraction for tooltips with AngularJS. Based on
 1. Install with bower:
 
    ```bash
-   $ bower install angular-tooltip --save-dev
+   $ bower install angular-tooltip --save
    ```
 
 2. Include angular-tooltip and tether:
