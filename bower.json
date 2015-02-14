@@ -1,7 +1,7 @@
 {
   "name": "angular-tooltip",
   "version": "0.0.1",
-  "main": "./dist/angular-modal.min.js",
+  "main": "./src/angular-tooltip.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/remind101/angular-modal.git"
