@@ -18,6 +18,12 @@ Simple and extensible abstraction for tooltips with AngularJS. Based on
    <script src="/bower_components/angular-tooltip/dist/angular-tooltip.js"></script>
    ```
 
+3. Add angular-tooltip as a dependency to your app:
+
+   ```javascript
+   angular.module('your-app', ['ngTooltip']);
+   ```
+
 ## Usage
 
 ### Simple Tooltips
