@@ -36,8 +36,8 @@
          */
         function attachTether() {
           new Tether(extend({
-            element: elem,
-            target: target
+            element: elem[0],
+            target: target[0]
           }, options.tether));
         };
 
