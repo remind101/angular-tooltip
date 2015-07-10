@@ -1,5 +1,7 @@
 ## Angular Tooltip
 
+**NOTE**: This repo is not maintained. You might want to try one of the [many forks](https://github.com/remind101/angular-tooltip/network) instead.
+
 Simple and extensible abstraction for tooltips with AngularJS. Based on
 [tether](http://github.hubspot.com/tether/).
 
